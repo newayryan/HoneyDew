@@ -41,6 +41,16 @@
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
   
   [self checkFBLogin];
+  
+  if (![ProfileManager sharedManager].appProfile) {
+    HDRootInputInfoViewController *hdRootInputInfoViewController = [[HDRootInputInfoViewController alloc] init];
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:hdRootInputInfoViewController];
+    hdRootInputInfoViewController.title = @"Please input your information";
+    [self presentViewController:navi animated:YES completion:nil];
+  } else {
+    
+    [[HDControlManager sharedManager] replaceRootViewControllerWithTabController];
+  }
 }
 
 - (void)viewDidLoad {
@@ -61,6 +71,9 @@
 #pragma mark - Private methods
 
 - (void)checkFBLogin {
+  // TODO: currently comment this out
+  return;
+  
   if ([FBSDKAccessToken currentAccessToken]) {
     
     [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
